@@ -5,6 +5,13 @@ import * as dat from 'lil-gui'
 THREE.ColorManagement.enabled = false
 
 /**
+ * Textures
+ * We will load a shadow texture to use as a Baked Shadow rather than the THREE.Js shadows
+ * */
+const textureLoader = new THREE.TextureLoader()
+const backedShadow = textureLoader.load('./textures/bakedShadow.jpg')
+
+/**
  * Base
  */
 // Debug
@@ -20,12 +27,12 @@ const scene = new THREE.Scene()
  * Lights
  */
 // Ambient light
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 scene.add(ambientLight)
 
 // Directional light
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.3)
 directionalLight.position.set(2, 2, - 1)
 gui.add(directionalLight, 'intensity').min(0).max(1).step(0.001)
 gui.add(directionalLight.position, 'x').min(- 5).max(5).step(0.001)
@@ -50,7 +57,7 @@ directionalLightCamHelper.visible = false;
 scene.add(directionalLightCamHelper)
 
 // Spotlight
-const spotLight = new THREE.SpotLight(0xffffff, 0.5, 10, Math.PI * 0.3)
+const spotLight = new THREE.SpotLight(0xffffff, 0.3, 10, Math.PI * 0.3)
 spotLight.castShadow = true
 spotLight.shadow.mapSize.width = 1024
 spotLight.shadow.mapSize.height = 1024
@@ -66,6 +73,21 @@ scene.add(spotLight.target)
 const spotLightCamHelper = new THREE.CameraHelper(spotLight.shadow.camera)
 spotLightCamHelper.visible = false
 scene.add(spotLightCamHelper)
+
+// Point Light
+const pointLight = new THREE.PointLight(0xffffff, 0.3)
+pointLight.castShadow = true
+pointLight.shadow.mapSize.width = 1024
+pointLight.shadow.mapSize.height = 1024
+pointLight.shadow.camera.near = 0.1
+pointLight.shadow.camera.far = 4
+
+pointLight.position.set(-1, 1, 0)
+scene.add(pointLight)
+// console.log(pointLight.shadow.camera)
+const pointLightCamHelper = new THREE.CameraHelper(pointLight.shadow.camera)
+pointLightCamHelper.visible = false
+scene.add(pointLightCamHelper)
 
 /**
  * Materials
@@ -87,7 +109,9 @@ sphere.castShadow = true
 
 const plane = new THREE.Mesh(
     new THREE.PlaneGeometry(5, 5),
-    material
+    new THREE.MeshBasicMaterial({
+        map: backedShadow
+    })
 )
 plane.rotation.x = - Math.PI * 0.5
 plane.position.y = - 0.5
@@ -143,7 +167,7 @@ renderer.outputColorSpace = THREE.LinearSRGBColorSpace
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-renderer.shadowMap.enabled = true;
+renderer.shadowMap.enabled = false;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap
 
 /**
