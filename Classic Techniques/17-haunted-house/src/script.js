@@ -30,7 +30,7 @@ scene.add(house)
 
 // Walls
 const walls = new THREE.Mesh(
-    new THREE.BoxBufferGeometry(4, 2.5, 4),
+    new THREE.BoxGeometry(4, 2.5, 4),
     new THREE.MeshStandardMaterial({ color: '#ac8e82' })
 )
 walls.position.y = 2.5 / 2;
@@ -38,7 +38,7 @@ house.add(walls)
 
 // Roof
 const roof = new THREE.Mesh(
-    new THREE.ConeBufferGeometry(3.5, 1, 4),
+    new THREE.ConeGeometry(3.5, 1, 4),
     new THREE.MeshStandardMaterial({ color: '#b35f45' })
 )
 roof.position.y = 2.5 + 0.5
@@ -47,7 +47,7 @@ house.add(roof)
 
 // Door
 const door = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(2, 2),
+    new THREE.PlaneGeometry(2, 2),
     new THREE.MeshStandardMaterial({ color: '#aa7b7b' })
 )
 door.position.z = 2 + 0.01
@@ -55,7 +55,7 @@ door.position.y = 1
 house.add(door)
 
 // Bushes
-const bushGeometry = new THREE.SphereBufferGeometry(1, 16, 16)
+const bushGeometry = new THREE.SphereGeometry(1, 16, 16)
 const bushMaterial = new THREE.MeshStandardMaterial({ color: '#89c854' })
 
 const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
@@ -76,6 +76,28 @@ bush4.position.set(-1, 0.05, 2.6)
 
 house.add(bush1, bush2, bush3, bush4)
 
+// Graves
+const graves = new THREE.Group()
+scene.add(graves)
+
+const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
+const graveMaterial = new THREE.MeshStandardMaterial({ color: '#b2b6b1' })
+
+// create graves all around the house
+for(let i = 0; i < 50; i++)
+{
+    const angle = Math.random() * Math.PI * 2
+    const radius = 3 + Math.random() * 6
+    const x = Math.sin(angle) * radius
+    const z = Math.cos(angle) * radius
+
+    const grave = new THREE.Mesh(graveGeometry, graveMaterial)
+    grave.position.set(x, 0.3, z)
+    grave.rotation.y = (Math.random() - 0.5) * 0.4
+    grave.rotation.z = (Math.random() - 0.5) * 0.4
+    graves.add(grave)
+}
+
 // Floor
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(20, 20),
@@ -89,18 +111,23 @@ scene.add(floor)
  * Lights
  */
 // Ambient light
-const ambientLight = new THREE.AmbientLight('#ffffff', 0.5)
+const ambientLight = new THREE.AmbientLight('#b9d5ff', 0.12)
 gui.add(ambientLight, 'intensity').min(0).max(1).step(0.001)
 scene.add(ambientLight)
 
 // Directional light
-const moonLight = new THREE.DirectionalLight('#ffffff', 0.5)
+const moonLight = new THREE.DirectionalLight('#b9d5ff', 0.12)
 moonLight.position.set(4, 5, - 2)
 gui.add(moonLight, 'intensity').min(0).max(1).step(0.001)
 gui.add(moonLight.position, 'x').min(- 5).max(5).step(0.001)
 gui.add(moonLight.position, 'y').min(- 5).max(5).step(0.001)
 gui.add(moonLight.position, 'z').min(- 5).max(5).step(0.001)
 scene.add(moonLight)
+
+// Door Light
+const doorLight = new THREE.PointLight('#ff7d46', 1, 7)
+doorLight.position.set(0, 2.2, 2.7)
+house.add(doorLight)
 
 /**
  * Sizes
