@@ -14,7 +14,7 @@ const loadingManager = new THREE.LoadingManager()
 // loadingManager.onError = () => console.log('on error')
 
 const textureLoader = new THREE.TextureLoader(loadingManager)
-const colorTexture = textureLoader.load('/textures/door/color.jpg')
+const colorTexture = textureLoader.load('/textures/minecraft.png')
 const alphaTexture = textureLoader.load('/textures/door/alpha.jpg')
 const heightTexture = textureLoader.load('/textures/door/height.jpg')
 const ambientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
@@ -22,12 +22,33 @@ const metalTexture = textureLoader.load('/textures/door/metalness.jpg')
 const normalTexture = textureLoader.load('/textures/door/normal.jpg')
 const roughTexture = textureLoader.load('/textures/door/roughness.jpg')
 
+// colorTexture.repeat.x = 2
+// colorTexture.repeat.y = 3
+
+// By default, texture will not repeat & last pixel gets stretched
+// So we use wrapS & wrapT to enforce the repeating
+// We can use MirroredRepeatWrapping for a mirror effect
+// colorTexture.wrapS = THREE.MirroredRepeatWrapping
+// colorTexture.wrapT = THREE.MirroredRepeatWrapping
+
+// colorTexture.offset.x = 0.5
+// colorTexture.offset.y = 0.5
+
+// colorTexture.rotation = Math.PI / 4
+// colorTexture.center.x = 0.5
+// colorTexture.center.y = 0.5
+
+// Vanilla Js implementation
 // const image = new Image()
 // const texture = new THREE.Texture(image)
 // image.onload = () => {
 //     texture.needsUpdate = true
 // }
 // image.src = 'textures/door/color.jpg'
+
+colorTexture.generateMipmaps = 0
+colorTexture.minFilter = THREE.NearestFilter
+colorTexture.magFilter = THREE.NearestFilter
 
 /**
  * Base
