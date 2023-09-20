@@ -17,13 +17,17 @@ const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()
 
 // Fog
-const fog = new THREE.Fog('#262837', 1, 15)
+const fog = new THREE.Fog('#5c5f73', 1, 15)
 scene.fog = fog
 
 /**
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
+
+
+// Load an image for grave as texture
+const graveEngraving = textureLoader.load('/images/engrave.jpeg')
 
 // Door
 const doorColorTexture = textureLoader.load('/textures/door/color.jpg')
@@ -136,7 +140,11 @@ const graves = new THREE.Group()
 scene.add(graves)
 
 const graveGeometry = new THREE.BoxGeometry(0.6, 0.8, 0.2)
-const graveMaterial = new THREE.MeshStandardMaterial({ color: '#b2b6b1' })
+const graveMaterial = new THREE.MeshStandardMaterial({
+    map: graveEngraving,
+    color: '#b2b6b1',
+    side: THREE.FrontSide
+})
 
 // create graves all around the house
 for(let i = 0; i < 50; i++)
@@ -248,7 +256,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.outputColorSpace = THREE.LinearSRGBColorSpace
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-renderer.setClearColor('#262837')
+renderer.setClearColor('#5c5f73')
 
 /**
  * Shadows
