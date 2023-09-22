@@ -136,6 +136,18 @@ const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
 
+    // Update Particles
+    // particles.rotation.y = elapsedTime * 0.5
+    for(let i = 0; i < count; i++){
+        const i3 = i * 3
+
+        const x = particlesGeometry.attributes.position.array[i3]
+        particlesGeometry.attributes.position.array[i3 + 1] = Math.sin(elapsedTime + x)
+        // console.log(particlesGeometry.attributes.position.array)
+    }
+
+    particlesGeometry.attributes.position.needsUpdate = true
+
     // Update controls
     controls.update()
 
