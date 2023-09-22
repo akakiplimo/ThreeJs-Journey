@@ -21,14 +21,63 @@ const scene = new THREE.Scene()
  */
 const textureLoader = new THREE.TextureLoader()
 
+const particleTexture = textureLoader.load('/textures/particles/9.png')
+
 /**
- * Test cube
+ * Particles
  */
+
+// Geometry
+// const particlesGeometry = new THREE.SphereGeometry(1, 32, 32);
+
+
+// Let's create our own Geometry
+const particlesGeometry = new THREE.BufferGeometry()
+const count = 5000;
+
+const positions = new Float32Array(count * 3)
+
+for(let i = 0; i < count * 3; i++){
+    positions[i] = (Math.random() - 0.5) * 10
+}
+
+particlesGeometry.setAttribute(
+    'position',
+    new THREE.BufferAttribute(positions, 3)
+)
+
+// Material
+const particlesMaterial = new THREE.PointsMaterial({
+    size: 0.1,
+    sizeAttenuation: true
+});
+particlesMaterial.color = new THREE.Color('#ff89cd')
+// Color, Map & AlphaMap
+particlesMaterial.transparent = true
+particlesMaterial.alphaMap = particleTexture
+// particlesMaterial.alphaTest = 0.001
+// particlesMaterial.depthTest = false  // May cause problems if other objects in the scene
+particlesMaterial.depthWrite = false
+
+
+// Points
+const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+scene.add(particles)
+
 const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.BoxGeometry(),
     new THREE.MeshBasicMaterial()
 )
 scene.add(cube)
+
+/**
+ * Test cube
+ */
+// const cube = new THREE.Mesh(
+//     new THREE.BoxGeometry(1, 1, 1),
+//     new THREE.MeshBasicMaterial()
+// )
+// scene.add(cube)
 
 /**
  * Sizes
