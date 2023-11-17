@@ -11,6 +11,10 @@
 /*    overflow: hidden;*/
 /*}*/
 
+html {
+    background: #1e1a20;
+}
+
 .webgl
 {
     position: fixed;
